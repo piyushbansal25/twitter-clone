@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { signIn } from 'next-auth/react';
 const handler = NextAuth({
 
   providers: [
@@ -9,6 +10,13 @@ const handler = NextAuth({
     }),
 
   ],
+  callbacks : {
+    async session({session, token}){
+        session.user.username = session.user.name.split(' ').join('').toLocaleLowerCase(); 
+        session.user.uid = token.sub;
+        return session;
+    }
+  }
 });
 
 export { handler as GET, handler as POST };
